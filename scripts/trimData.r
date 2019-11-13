@@ -17,3 +17,4 @@ cabernetWine <- cabernetWine[sample(nrow(cabernetWine), 1000), ]
 redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000), ]
 
 trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine, redBlendWine))
+write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
