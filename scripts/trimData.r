@@ -29,10 +29,12 @@ trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine
 # Remove X column 
 trimmedData <- subset( trimmedData, select = -X )
 
+
+# ---------------------TEXT MINING --------------------- #
+
 # Extract year from title
 trimmedData$year = str_extract(trimmedData[,12], "[0-2][0,1,9][0-9][0-9]")
 
-# TEXT MINING
 data_description <- as.vector(trimmedData$description)
 description_source <- VectorSource(data_description)
 description_corpus <- Corpus(description_source)
@@ -56,7 +58,26 @@ description_corpus <- tm_map(description_corpus, content_transformer(replace_sym
 description_corpus <- tm_map(description_corpus, removeWords, stopwords("en"))
 # Remove excess whitespace
 description_corpus <- tm_map(description_corpus, stripWhitespace)
+# Stemming
+description_corpus <- tm_map(description_corpus,  stemDocument)
 
+frequent_terms <- freq_terms(description_corpus, 20)
+plot(frequent_terms)
+
+# Create the dtm from the corpus
+description_dtm <- DocumentTermMatrix(description_corpus)
+# Print data
+description_dtm
+
+# Convert description_dtm to a matrix
+description_m <- as.matrix(description_dtm)
+
+# Remove low frequency terms
+description_dtm_rm_sparse <- removeSparseTerms(dtm, sparse=0.99)
+inspect(dtm)
+
+
+# After all, save data
 # Write data to CSV
 write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
 
