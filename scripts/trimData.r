@@ -74,7 +74,10 @@ description_m <- as.matrix(description_dtm)
 
 # Remove low frequency terms
 description_dtm_rm_sparse <- removeSparseTerms(dtm, sparse=0.99)
-inspect(dtm)
+description_dtm_rm_sparse
+
+# Convert description_dtm_rm_sparse to a matrix
+description_m <- as.matrix(description_dtm_rm_sparse)
 
 
 # After all, save data
