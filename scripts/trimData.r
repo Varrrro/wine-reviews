@@ -1,3 +1,7 @@
+library(stringr)
+library(tm)
+library(qdap)
+
 # Read CSV into R
 wineData <- read.csv(file="../data/winemag-data-130k-v2.csv", header=TRUE, sep=",")
 
@@ -22,5 +26,20 @@ redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000), ]
 # Join the four subsets
 trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine, redBlendWine))
 
+# Remove X column 
+trimmedData <- subset( trimmedData, select = -X )
+
+# Extract year from title
+trimmedData$year = str_extract(trimmedData[,12], "[0-2][0,1,9][0-9][0-9]")
+
+# TEXT MINING
+data_description <- as.vector(trimmedData$description)
+description_source <- VectorSource(data_description)
+description_corpus <- Corpus(description_source)
+
+frequent_terms <- freq_terms(data_description, 30)
+plot(frequent_terms)
+
 # Write data to CSV
 write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
+

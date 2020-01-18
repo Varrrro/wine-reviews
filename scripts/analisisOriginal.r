@@ -11,6 +11,9 @@ summary(wineData)
 hist(wineData$points, main = "Evaluación", xlab = "Puntos", ylab = "Frecuencia")
 hist(wineData$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
 
+wineDataPrice<-subset(wineData, price < 150)
+hist(wineDataPrice$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
+
 tab = table(wineData$variety)
-pie(tab, labels = names("Pinot Noir"))
+pie(tab)
 barplot(tab)
