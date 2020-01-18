@@ -37,8 +37,23 @@ data_description <- as.vector(trimmedData$description)
 description_source <- VectorSource(data_description)
 description_corpus <- Corpus(description_source)
 
-frequent_terms <- freq_terms(data_description, 30)
+frequent_terms <- freq_terms(data_description, 50)
 plot(frequent_terms)
+
+# Replace contraction
+description_corpus <- tm_map(description_corpus, content_transformer(replace_contraction))
+# Convert to lower case
+description_corpus <- tm_map(description_corpus, content_transformer(tolower))
+# Remove punctuation marks in text
+description_corpus <- tm_map(description_corpus, content_transformer(removePunctuation))
+# Remove excess whitespace
+description_corpus <- tm_map(description_corpus, content_transformer(stripWhitespace))
+# Replace numbers with words
+description_corpus <- tm_map(description_corpus, content_transformer(replace_number))
+# Replace abbreviation
+description_corpus <- tm_map(description_corpus, content_transformer(replace_abbreviation))
+# Replace symbol
+description_corpus <- tm_map(description_corpus, content_transformer(replace_symbol))
 
 # Write data to CSV
 write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
