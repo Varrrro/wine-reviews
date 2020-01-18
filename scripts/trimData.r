@@ -41,19 +41,21 @@ frequent_terms <- freq_terms(data_description, 50)
 plot(frequent_terms)
 
 # Replace contraction
-description_corpus <- tm_map(description_corpus, content_transformer(replace_contraction))
+description_corpus <- tm_map(description_corpus, replace_contraction)
 # Convert to lower case
 description_corpus <- tm_map(description_corpus, content_transformer(tolower))
 # Remove punctuation marks in text
-description_corpus <- tm_map(description_corpus, content_transformer(removePunctuation))
-# Remove excess whitespace
-description_corpus <- tm_map(description_corpus, content_transformer(stripWhitespace))
+description_corpus <- tm_map(description_corpus, removePunctuation)
 # Replace numbers with words
 description_corpus <- tm_map(description_corpus, content_transformer(replace_number))
 # Replace abbreviation
 description_corpus <- tm_map(description_corpus, content_transformer(replace_abbreviation))
 # Replace symbol
 description_corpus <- tm_map(description_corpus, content_transformer(replace_symbol))
+# Remove most common English words
+description_corpus <- tm_map(description_corpus, removeWords, stopwords("en"))
+# Remove excess whitespace
+description_corpus <- tm_map(description_corpus, stripWhitespace)
 
 # Write data to CSV
 write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
