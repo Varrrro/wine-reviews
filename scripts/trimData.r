@@ -1,6 +1,9 @@
 library(stringr)
 library(tm)
 library(qdap)
+library(wordcloud)
+library(SnowballC)
+library(data.table)
 
 # Read CSV into R
 wineData <- read.csv(file="../data/winemag-data-130k-v2.csv", header=TRUE, sep=",")
@@ -25,9 +28,6 @@ redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000), ]
 
 # Join the four subsets
 trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine, redBlendWine))
-
-# Remove X column 
-trimmedData <- subset( trimmedData, select = -X )
 
 
 # ---------------------TEXT MINING --------------------- #
@@ -68,17 +68,28 @@ plot(frequent_terms)
 description_dtm <- DocumentTermMatrix(description_corpus)
 # Print data
 description_dtm
-
+ 
 # Convert description_dtm to a matrix
 description_m <- as.matrix(description_dtm)
+description_m[1:18, 1:12]
 
 # Remove low frequency terms
-description_dtm_rm_sparse <- removeSparseTerms(dtm, sparse=0.99)
+description_dtm_rm_sparse <- removeSparseTerms(description_dtm, sparse=0.999)
+# Print data
 description_dtm_rm_sparse
 
 # Convert description_dtm_rm_sparse to a matrix
 description_m <- as.matrix(description_dtm_rm_sparse)
+# Print a portion of the matrix
+description_m[1:18, 1:12]
 
+
+colnames(description_m) <- make.names(colnames(description_m))
+
+freqWords <- colSums(description_m)
+freqWords <- freqWords[order(freqWords, decreasing = T)]
+wordcloud(freq = as.vector(freqWords), words = names(freqWords),
+          random.order = FALSE, colors = brewer.pal(8, 'Dark2'),max.words =100)
 
 # After all, save data
 # Write data to CSV

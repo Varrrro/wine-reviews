@@ -12,15 +12,21 @@ str(wineData)
 # View summary
 summary(wineData)
 
+# Score histogram.
 hist(wineData$points, main = "Evaluación", xlab = "Puntos", ylab = "Frecuencia")
+
+# Year histogram
 hist(wineData$year, main = "Año", xlab = "Año", ylab = "Frecuencia")
+
+wineDataYear<-subset(wineData, year > 2000)
+hist(wineDataYear$year, main = "Año", xlab = "Año", ylab = "Frecuencia")
+
+# Price histogram
 hist(wineData$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
 
-wineDataYear<-subset(wineData, year < 1900)
-
-
-wineDataPrice<-subset(wineData, price < 150)
+wineDataPrice<-subset(wineData, price < 100)
 hist(wineDataPrice$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
+
 
 ggplot(wineDataPrice, aes(wineDataPrice$price, wineDataPrice$points, col = variety)) + 
   geom_point()
