@@ -29,6 +29,7 @@ redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000), ]
 # Join the four subsets
 trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine, redBlendWine))
 
+trimmedData$points <- (trimmedData$points-80.0)/2.0
 
 # ---------------------TEXT MINING --------------------- #
 
