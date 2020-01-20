@@ -14,13 +14,16 @@ frame <- as.data.frame(as.matrix(dtm))
 # Add class column to dataframe
 frame <- cbind(frame, variety = data$variety)
 
+# Set correct column names for classifier
+colnames(frame) <- make.names(colnames(frame))
+
 # Split into two partitions: 80% train and 20% test
 ind <- sample(2, nrow(frame), replace = TRUE, prob = c(0.8, 0.2))
 train <- frame[ind==1,]
 test <- frame[ind==2,]
 
 # Create classifier
-wineKNN <- kknn(variety ~ ., train, test, k = 3)
+wineKNN <- kknn(variety ~ ., train, test, k = 4)
 
 # View classifier
 summary(wineKNN)
