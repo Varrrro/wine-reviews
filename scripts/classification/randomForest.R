@@ -29,7 +29,7 @@ wineForest <- randomForest(variety ~ ., train)
 table(predict(wineForest), train$variety)
 
 # Predict test data
-tt <- table(predict(wineTree, test), test$variety)
+tt <- table(predict(wineForest, test), test$variety)
 
 # Measures
 successRate <- measures.success(tt, nrow(test))
