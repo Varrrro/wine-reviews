@@ -1,6 +1,7 @@
 library("ggplot2")
 library(reshape2)
 library(stringr)
+library('factoextra')
 set.seed(20)
 
 # Read data
@@ -22,6 +23,11 @@ for(j in 1:3){
   v=(x-mean(x))/sqrt(var(x));
   wineDataNumeric[,j]=v
 }
+
+# Optimal number of cluster
+datos <- scale(wineDataNumeric)
+fviz_nbclust(x = datos, FUNcluster = kmeans, method = "silhouette", k.max = 15) +
+  labs(title = "Número óptimo de clusters")
 
 kmeans.result=kmeans(wineDataNumeric,4)
 kmeans.result
