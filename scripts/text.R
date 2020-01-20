@@ -26,5 +26,5 @@ text.process <- function(text) {
   # Stemming
   corpus <- tm_map(corpus,  stemDocument)
   
-  dtm <- DocumentTermMatrix(corpus)
+  dtm <- removeSparseTerms(DocumentTermMatrix(corpus), sparse = 0.999)
 }
