@@ -1,5 +1,5 @@
 library(kknn)
-source("text.R")
+source("text/process.R")
 source("classification/measures.R")
 
 # Read dataset from CSV

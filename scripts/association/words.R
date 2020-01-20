@@ -1,5 +1,5 @@
 library(tm)
-source("text.R")
+source("text/process.R")
 
 # Read dataset from CSV
 data <- read.csv(file = "../data/wine-reviews-trimmed.csv", header = TRUE, sep = ",")

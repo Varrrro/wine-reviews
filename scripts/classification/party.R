@@ -1,5 +1,5 @@
 library(party)
-source("text.R")
+source("text/process.R")
 source("classification/measures.R")
 
 # Read dataset from CSV
