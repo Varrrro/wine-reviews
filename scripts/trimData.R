@@ -8,11 +8,14 @@ library(data.table)
 # Read CSV into R
 wineData <- read.csv(file = "../data/winemag-data-130k-v2.csv", header = TRUE, sep  = ",")
 
+# Remove ID column
+wineData <- wineData[-1]
+
 # Extract year from title
-wineData$year = str_extract(wineData[,12], "[0-2][0,1,9][0-9][0-9]")
+wineData$year = str_extract(wineData$title, "[0-2][0,1,9][0-9][0-9]")
 
 # Change points range to 0-10
-wineData$points <- (wineData$points-80.0)/2.0
+wineData$points <- (wineData$points - 80.0) / 2.0
 
 # Create subsets for each class
 pinotNoirWine <- subset(wineData, variety == "Pinot Noir")
