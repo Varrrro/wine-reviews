@@ -1,8 +1,8 @@
-library("ggplot2")
+library(ggplot2)
 library(reshape2)
 library(stringr)
 
-wineData <- read.csv(file="../data/wine-reviews-trimmed.csv", header=TRUE, sep=",")
+wineData <- read.csv(file = "../data/wine-reviews-trimmed.csv", header = TRUE, sep = ",")
 
 # See data
 dim(wineData)
@@ -54,4 +54,3 @@ ggplot(chardonnayWine, aes(chardonnayWine$year, chardonnayWine$price)) +
 
 ggplot(cabernetWine, aes(cabernetWine$year, cabernetWine$price)) + 
   geom_point()
-

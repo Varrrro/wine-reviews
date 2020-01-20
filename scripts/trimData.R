@@ -6,7 +6,10 @@ library(SnowballC)
 library(data.table)
 
 # Read CSV into R
-wineData <- read.csv(file="../data/winemag-data-130k-v2.csv", header=TRUE, sep=",")
+wineData <- read.csv(file = "../data/winemag-data-130k-v2.csv", header = TRUE, sep  = ",")
+
+# Extract year from title
+wineData$year = str_extract(wineData[,12], "[0-2][0,1,9][0-9][0-9]")
 
 # Create subsets for each class
 pinotNoirWine <- subset(wineData, variety == "Pinot Noir")
@@ -21,14 +24,16 @@ cabernetWine <- na.omit(cabernetWine)
 redBlendWine <- na.omit(redBlendWine)
 
 # Keep only 1000 rows of each subset
-pinotNoirWine <- pinotNoirWine[sample(nrow(pinotNoirWine), 1000), ]
-chardonnayWine <- chardonnayWine[sample(nrow(chardonnayWine), 1000), ]
-cabernetWine <- cabernetWine[sample(nrow(cabernetWine), 1000), ]
-redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000), ]
+pinotNoirWine <- pinotNoirWine[sample(nrow(pinotNoirWine), 1000),]
+chardonnayWine <- chardonnayWine[sample(nrow(chardonnayWine), 1000),]
+cabernetWine <- cabernetWine[sample(nrow(cabernetWine), 1000),]
+redBlendWine <- redBlendWine[sample(nrow(redBlendWine), 1000),]
 
 # Join the four subsets
 trimmedData <- do.call("rbind", list(pinotNoirWine, chardonnayWine, cabernetWine, redBlendWine))
 
+# Write to CSV
+write.csv(trimmedData, "../data/wine-reviews-trimmed.csv", row.names = FALSE)
 
 # ---------------------TEXT MINING --------------------- #
 
@@ -90,8 +95,3 @@ freqWords <- colSums(description_m)
 freqWords <- freqWords[order(freqWords, decreasing = T)]
 wordcloud(freq = as.vector(freqWords), words = names(freqWords),
           random.order = FALSE, colors = brewer.pal(8, 'Dark2'),max.words =100)
-
-# After all, save data
-# Write data to CSV
-write.csv(trimmedData,"../data/wine-reviews-trimmed.csv", row.names=FALSE)
-

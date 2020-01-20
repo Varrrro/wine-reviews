@@ -1,5 +1,5 @@
 # Read data from CSV
-wineData <- read.csv(file="../data/winemag-data-130k-v2.csv", header=TRUE, sep=",")
+wineData <- read.csv(file = "../data/winemag-data-130k-v2.csv", header = TRUE, sep = ",")
 
 # View information about the dataset
 dim(wineData)
@@ -9,17 +9,12 @@ str(wineData)
 # View summary
 summary(wineData)
 
-# Score histogram.
+# Score histogram
 hist(wineData$points, main = "Evaluación", xlab = "Puntos", ylab = "Frecuencia")
 
 # Price histogram
 hist(wineData$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
 
-
 # Price histogram for wines under 150
 wineDataPrice<-subset(wineData, price < 150)
 hist(wineDataPrice$price, main = "Precio", xlab = "Precio", ylab = "Frecuencia")
-
-tab = table(wineData$variety)
-pie(tab)
-barplot(tab)
