@@ -45,42 +45,38 @@ tfidf.matrix <- as.matrix(description_dtm.tfidf)
 
 dist.matrix = proxy::dist(tfidf.matrix, method = "cosine")
 
+datos <- scale(tfidf.matrix)
+fviz_nbclust(x = datos, FUNcluster = kmeans, method = "silhouette", k.max = 15) +
+  labs(title = "Número óptimo de clusters")
 
-clustering.kmeans <- kmeans(tfidf.matrix, 4) 
-clustering.hierarchical <- hclust(dist.matrix, method = "ward.D2") 
-clustering.dbscan <- dbscan::hdbscan(dist.matrix, minPts = 10)
+n_cluster = 2
 
-table(wineData$variety,clustering.kmeans$cluster)
-
-master.cluster <- clustering.kmeans$cluster 
-slave.hierarchical <- cutree(clustering.hierarchical, k = 4) 
-slave.dbscan <- clustering.dbscan$cluster 
-stacked.clustering <- rep(NA, length(master.cluster))  
-names(stacked.clustering) <- 1:length(master.cluster) 
-for (cluster in unique(master.cluster)) { 
-  indexes = which(master.cluster == cluster, arr.ind = TRUE) 
-  slave1.votes <- table(slave.hierarchical[indexes]) 
-  slave1.maxcount <- names(slave1.votes)[which.max(slave1.votes)]   
-  slave1.indexes = which(slave.hierarchical == slave1.maxcount, arr.ind = TRUE) 
-  slave2.votes <- table(slave.dbscan[indexes]) 
-  slave2.maxcount <- names(slave2.votes)[which.max(slave2.votes)]   
-  stacked.clustering[indexes] <- slave2.maxcount 
-}
-
+clustering.kmeans <- kmeans(tfidf.matrix, n_cluster) 
 points <- cmdscale(dist.matrix, k = 2) 
-palette <- colorspace::diverge_hcl(4) # Creating a color palette 
-previous.par <- par(mfrow=c(2,2), mar = rep(1.5, 4)) 
+# Creating a color palette 
+palette <- colorspace::diverge_hcl(n_cluster) 
 
 plot(points, main = 'K-Means clustering', col = as.factor(master.cluster), 
      mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), 
      xaxt = 'n', yaxt = 'n', xlab = '', ylab = '') 
-plot(points, main = 'Hierarchical clustering', col = as.factor(slave.hierarchical), 
-     mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0),  
-     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '') 
-plot(points, main = 'Density-based clustering', col = as.factor(slave.dbscan), 
+
+table(wineData$variety,clustering.kmeans$cluster)
+
+# -------------------------------------------------
+
+n_cluster = 4
+
+clustering.kmeans <- kmeans(tfidf.matrix, n_cluster) 
+points <- cmdscale(dist.matrix, k = 2) 
+# Creating a color palette 
+palette <- colorspace::diverge_hcl(n_cluster) 
+
+plot(points, main = 'K-Means clustering', col = as.factor(master.cluster), 
      mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), 
      xaxt = 'n', yaxt = 'n', xlab = '', ylab = '') 
-plot(points, main = 'Stacked clustering', col = as.factor(stacked.clustering), 
-     mai = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), 
-     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '') 
-par(previous.par) # recovering the original plot space parameters
+
+table(wineData$variety,clustering.kmeans$cluster)
+
+# -------------------------------------------------
+
+dev.off() # Clear graphics
